@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* Site-wide theme tokens. Tailwind v4 reads these via the @theme block. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-accent: oklch(0.55 0.18 255); /* link / highlight color */
+}
+
+html {
+  scroll-behavior: smooth;
+}

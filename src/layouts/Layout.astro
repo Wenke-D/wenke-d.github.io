@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+import { ui, type Lang } from "../i18n";
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title, description } = Astro.props;
+const t = ui[lang];
+// Homepage tab: "Name · Role". Subpages: "Page · Name".
+const pageTitle = title ? `${title} · ${t.name}` : `${t.name} · ${t.role}`;
+const desc = description ?? t.blurb;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body class="min-h-screen bg-white text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-200">
+    <div class="mx-auto max-w-2xl px-6 py-12 sm:py-16">
+      <slot />
+      <footer class="mt-20 border-t border-zinc-200 pt-6 text-sm text-zinc-500 dark:border-zinc-800">
+        © {new Date().getFullYear()} {t.name}. Built with{" "}
+        <a class="text-accent hover:underline" href="https://astro.build">Astro</a>.
+      </footer>
+    </div>
+  </body>
+</html>

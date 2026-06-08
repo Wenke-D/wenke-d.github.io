@@ -1,0 +1,30 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { languages, type Lang } from "../i18n";
+
+interface Props {
+  lang: Lang;
+  // Page path without locale prefix, e.g. "" for home or "publications".
+  path?: string;
+}
+
+const { lang, path = "" } = Astro.props;
+---
+
+<nav class="flex justify-end gap-3 text-sm" aria-label="Language">
+  {
+    Object.entries(languages).map(([code, label]) => (
+      <a
+        href={getRelativeLocaleUrl(code, path)}
+        class={
+          code === lang
+            ? "font-semibold text-zinc-900 dark:text-white"
+            : "text-zinc-400 hover:text-accent"
+        }
+        aria-current={code === lang ? "page" : undefined}
+      >
+        {label}
+      </a>
+    ))
+  }
+</nav>

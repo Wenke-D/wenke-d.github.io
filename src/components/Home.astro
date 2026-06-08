@@ -1,0 +1,115 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Layout from "../layouts/Layout.astro";
+import LangSwitcher from "./LangSwitcher.astro";
+import { site } from "../data/site";
+import { publications } from "../data/publications";
+import { ui, news as newsByLang, type Lang } from "../i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const news = newsByLang[lang];
+const selected = publications.filter((p) => p.selected);
+
+// Render **bold** spans in author strings (used to bold your own name).
+function renderAuthors(authors: string): string {
+  return authors.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
+const social = [
+  { label: t.nav.email, href: `mailto:${site.email}` },
+  { label: t.nav.thesis, href: site.links.thesis },
+].filter((l) => l.href);
+
+const pubsUrl = getRelativeLocaleUrl(lang, "publications");
+---
+
+<Layout lang={lang}>
+  <LangSwitcher lang={lang} path="" />
+
+  <!-- Header -->
+  <header class="mt-6 flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+        {t.name}
+      </h1>
+      <p class="mt-1 text-lg text-zinc-600 dark:text-zinc-400">
+        {t.role}, {t.affiliation}
+      </p>
+    </div>
+    <!-- Drop your headshot at public/photo.jpg -->
+    <img
+      src="/photo.jpg"
+      alt={t.name}
+      width="112"
+      height="112"
+      class="h-28 w-28 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-800"
+    />
+  </header>
+
+  <nav class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+    {
+      social.map((l) => (
+        <a class="text-accent hover:underline" href={l.href}>
+          {l.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <!-- About -->
+  <section class="mt-10 leading-relaxed">
+    <p>{t.blurb}</p>
+  </section>
+
+  <!-- News -->
+  <section class="mt-12">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">{t.newsHeading}</h2>
+    <ul class="mt-3 space-y-2 text-sm">
+      {
+        news.map((n) => (
+          <li class="flex gap-3">
+            <span class="w-20 shrink-0 text-zinc-400">{n.date}</span>
+            <span set:html={n.text} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Selected publications -->
+  <section class="mt-12">
+    <div class="flex items-baseline justify-between">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+        {t.selectedHeading}
+      </h2>
+      <a class="text-sm text-accent hover:underline" href={pubsUrl}>{t.allLink}</a>
+    </div>
+    <ul class="mt-4 space-y-6">
+      {
+        selected.map((p) => (
+          <li>
+            <h3 class="font-medium text-zinc-900 dark:text-white">{p.title}</h3>
+            <p class="text-sm text-zinc-600 dark:text-zinc-400" set:html={renderAuthors(p.authors)} />
+            <p class="text-sm italic text-zinc-500">
+              {p.venue}, {p.year}
+            </p>
+            {p.links && (
+              <p class="mt-1 flex gap-3 text-sm">
+                {p.links.map((l) => (
+                  <a class="text-accent hover:underline" href={l.href}>
+                    {l.label}
+                  </a>
+                ))}
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
