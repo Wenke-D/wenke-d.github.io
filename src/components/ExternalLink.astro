@@ -1,0 +1,32 @@
+---
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+{/* Leaves the site: opens in a new tab, marked with an arrow. Internal links
+    stay plain. `noopener` keeps the new tab from touching this one via
+    window.opener; `noreferrer` withholds the referrer header.
+
+    The tags below hug each other on purpose: a newline between <slot /> and
+    the <svg> becomes a text space in the rendered link, which pushes the arrow
+    away from the word and leaves a gap before any punctuation that follows. */}
+<a
+  class="text-accent hover:underline"
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  ><slot /><svg
+    class="ml-[0.12em] inline-block h-[0.62em] w-[0.62em] align-[0.08em]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    ><path d="M7 17 17 7" /><path d="M9 7h8v8" /></svg
+  ></a
+>

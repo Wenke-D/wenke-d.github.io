@@ -1,7 +1,7 @@
 ---
 name: Wenke DU
 role: PhD Student
-affiliation: Inria DataMove, IFPEN & Université Grenoble Alpes
+affiliation: Inria DataMove, IFPEN, Université Grenoble Alpes
 # Shown in search results and link previews. Keep it to one sentence.
 summary: PhD student at Inria & IFPEN working on neural surrogate models for massively parallel simulations and their deployment on clusters.
 ---

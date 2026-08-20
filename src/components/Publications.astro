@@ -3,6 +3,8 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import type { Lang } from "../i18n";
+import { renderAuthors } from "../lib/authors";
+import ExternalLink from "./ExternalLink.astro";
 
 interface Props {
   lang: Lang;
@@ -11,10 +13,6 @@ interface Props {
 const { lang } = Astro.props;
 const t = (await getEntry("ui", lang))!.data;
 const publications = (await getCollection("publications")).map((p) => p.data);
-
-function renderAuthors(authors: string): string {
-  return authors.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-}
 
 // Group by year, newest first.
 const byYear = new Map<number, typeof publications>();
@@ -44,9 +42,7 @@ const homeUrl = getRelativeLocaleUrl(lang, "");
               {p.links.length > 0 && (
                 <p class="mt-1 flex gap-3 text-sm">
                   {p.links.map((l) => (
-                    <a class="text-accent hover:underline" href={l.href}>
-                      {l.label}
-                    </a>
+                    <ExternalLink href={l.href}>{l.label}</ExternalLink>
                   ))}
                 </p>
               )}

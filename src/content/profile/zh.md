@@ -1,7 +1,7 @@
 ---
 name: 杜文可
 role: 博士研究生
-affiliation: Inria DataMove、IFPEN 与格勒诺布尔阿尔卑斯大学
+affiliation: Inria DataMove、IFPEN、格勒诺布尔阿尔卑斯大学
 # 显示在搜索结果和链接预览里，一句话即可。
 summary: Inria 与 IFPEN 博士研究生，研究大规模并行仿真中的神经网络代理模型及其集群部署。
 ---

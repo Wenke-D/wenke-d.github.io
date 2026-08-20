@@ -6,6 +6,8 @@ import LangSwitcher from "./LangSwitcher.astro";
 import type { Lang } from "../i18n";
 import { monthYear } from "../lib/date";
 import { getPosts } from "../lib/posts";
+import { renderAuthors } from "../lib/authors";
+import ExternalLink from "./ExternalLink.astro";
 
 interface Props {
   lang: Lang;
@@ -33,11 +35,6 @@ const news = await Promise.all(
 const selected = (await getCollection("publications", (p) => p.data.selected)).sort(
   (a, b) => b.data.year - a.data.year,
 );
-
-// Render **bold** spans in author strings (used to bold your own name).
-function renderAuthors(authors: string): string {
-  return authors.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-}
 
 const pubsUrl = getRelativeLocaleUrl(lang, "publications");
 // The blog link only appears once there is something published to link to.
@@ -71,7 +68,7 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
 
   <nav class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
     {hasPosts && <a class="text-accent hover:underline" href={blogUrl}>{t.blogTitle}</a>}
-    <a class="text-accent hover:underline" href={contact.thesis}>{t.nav.thesis}</a>
+    <ExternalLink href={contact.thesis}>{t.nav.thesis}</ExternalLink>
   </nav>
 
   <!-- About -->
@@ -116,9 +113,7 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
             {p.links.length > 0 && (
               <p class="mt-1 flex gap-3 text-sm">
                 {p.links.map((l) => (
-                  <a class="text-accent hover:underline" href={l.href}>
-                    {l.label}
-                  </a>
+                  <ExternalLink href={l.href}>{l.label}</ExternalLink>
                 ))}
               </p>
             )}

@@ -176,3 +176,20 @@ html {
     background-color: var(--shiki-dark-bg) !important;
   }
 }
+
+/* Same arrow as <ExternalLink>, for links written in Markdown. Drawn as a mask
+   so it inherits the link color instead of shipping two colored copies. Keep
+   these numbers in sync with the component. */
+.rich a[target="_blank"]::after,
+.prose a[target="_blank"]::after {
+  content: "";
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  margin-left: 0.12em;
+  vertical-align: 0.08em;
+  background-color: currentColor;
+  --arrow: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M7 17 17 7"/%3E%3Cpath d="M9 7h8v8"/%3E%3C/svg%3E');
+  -webkit-mask: var(--arrow) no-repeat center / contain;
+  mask: var(--arrow) no-repeat center / contain;
+}
