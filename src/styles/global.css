@@ -48,6 +48,42 @@ html {
   margin-top: 0.75em;
 }
 
+/* The reading surface on a post page. A warm off-white panel with a hairline
+   edge: on the plain page background the column had nothing holding it, and
+   the eye had no boundary to settle against. Only posts get this — the
+   homepage stays open. */
+.post-surface {
+  background: #faf7f0;
+  border: 1px solid #eae2d4;
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .post-surface {
+    padding: 2.75rem 3rem;
+  }
+}
+
+/* Inline code and rules inside the panel take a warm tint too: the default
+   zinc greys read as dirty against cream. */
+.post-surface .prose {
+  --prose-surface: #f0eade;
+  --prose-border: #e2d9c8;
+}
+
+@media (prefers-color-scheme: dark) {
+  .post-surface {
+    background: #1a1917;
+    border-color: #2b2823;
+  }
+
+  .post-surface .prose {
+    --prose-surface: #262320;
+    --prose-border: #322e28;
+  }
+}
+
 /* Blog post bodies. Hand-written rather than a typography plugin: the site only
    needs the handful of elements below, in the same zinc palette as everything
    else. Colors are literal because Tailwind only emits the theme variables it

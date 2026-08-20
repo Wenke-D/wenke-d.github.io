@@ -20,7 +20,7 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
 <Layout lang={lang} title={post.data.title} description={post.data.description}>
   <a class="text-sm text-accent hover:underline" href={blogUrl}>{t.backBlog}</a>
 
-  <article class="mt-4">
+  <article class="post-surface mt-6">
     <h1 class="text-2xl font-semibold tracking-tight text-balance text-zinc-900 dark:text-white">
       {post.data.title}
     </h1>
