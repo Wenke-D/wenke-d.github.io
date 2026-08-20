@@ -1,0 +1,45 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import type { Lang } from "../i18n";
+import { getPosts, slugOf } from "../lib/posts";
+import { fullDate } from "../lib/date";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = (await getEntry("ui", lang))!.data;
+const posts = await getPosts(lang);
+const homeUrl = getRelativeLocaleUrl(lang, "");
+---
+
+<Layout lang={lang} title={t.blogTitle}>
+  <a class="text-sm text-accent hover:underline" href={homeUrl}>{t.backHome}</a>
+  <h1 class="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+    {t.blogTitle}
+  </h1>
+
+  <ul class="mt-8 space-y-8">
+    {
+      posts.map((post) => (
+        <li>
+          <p class="text-sm text-zinc-400">{fullDate(lang, post.data.date)}</p>
+          <h2 class="mt-1 text-lg font-medium">
+            <a
+              class="text-zinc-900 hover:text-accent dark:text-white dark:hover:text-accent"
+              href={getRelativeLocaleUrl(lang, `blog/${slugOf(post)}`)}
+            >
+              {post.data.title}
+            </a>
+          </h2>
+          {post.data.description && (
+            <p class="mt-1 text-zinc-600 dark:text-zinc-400">{post.data.description}</p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

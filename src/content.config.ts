@@ -25,6 +25,21 @@ const news = defineCollection({
   }),
 });
 
+// Blog posts, filed under their language: posts/en/*.md. The file name becomes
+// the URL (posts/en/why-nix.md -> /blog/why-nix). A post exists independently in
+// each language — there is no requirement to write both.
+const posts = defineCollection({
+  loader: glob({ pattern: "*/*.md", base: "./src/content/posts" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    // One line shown under the title in the post list. Optional.
+    description: z.string().optional(),
+    // Drafts show up while running `npm run dev`, but never in a build.
+    draft: z.boolean().default(false),
+  }),
+});
+
 // Interface labels, keyed by language code.
 const ui = defineCollection({
   loader: file("src/content/ui.yaml"),
@@ -35,7 +50,9 @@ const ui = defineCollection({
     selectedHeading: z.string(),
     allLink: z.string(),
     pubsTitle: z.string(),
+    blogTitle: z.string(),
     backHome: z.string(),
+    backBlog: z.string(),
   }),
 });
 
@@ -61,4 +78,4 @@ const site = defineCollection({
   }),
 });
 
-export const collections = { profile, news, ui, publications, site };
+export const collections = { profile, news, posts, ui, publications, site };

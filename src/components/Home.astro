@@ -4,6 +4,8 @@ import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import LangSwitcher from "./LangSwitcher.astro";
 import type { Lang } from "../i18n";
+import { monthYear } from "../lib/date";
+import { getPosts } from "../lib/posts";
 
 interface Props {
   lang: Lang;
@@ -21,14 +23,9 @@ const { Content: Bio } = await render(profileEntry);
 // News items live in src/content/news/<lang>/, newest first.
 const newsEntries = (await getCollection("news", (n) => n.id.startsWith(`${lang}/`)))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const monthYear = new Intl.DateTimeFormat(lang === "zh" ? "zh-CN" : "en-US", {
-  year: "numeric",
-  month: lang === "zh" ? "long" : "short",
-  timeZone: "UTC",
-});
 const news = await Promise.all(
   newsEntries.map(async (n) => ({
-    date: monthYear.format(n.data.date),
+    date: monthYear(lang, n.data.date),
     Content: (await render(n)).Content,
   })),
 );
@@ -43,6 +40,9 @@ function renderAuthors(authors: string): string {
 }
 
 const pubsUrl = getRelativeLocaleUrl(lang, "publications");
+// The blog link only appears once there is something published to link to.
+const hasPosts = (await getPosts(lang)).length > 0;
+const blogUrl = getRelativeLocaleUrl(lang, "blog");
 ---
 
 <Layout lang={lang}>
@@ -71,6 +71,7 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
   <nav class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
     {/* Plain text, not a link: one click selects the whole address for copying. */}
     <span class="select-all text-zinc-600 dark:text-zinc-400">{contact.email}</span>
+    {hasPosts && <a class="text-accent hover:underline" href={blogUrl}>{t.blogTitle}</a>}
     <a class="text-accent hover:underline" href={contact.thesis}>{t.nav.thesis}</a>
   </nav>
 

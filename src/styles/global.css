@@ -23,3 +23,156 @@ html {
 .rich p + p {
   margin-top: 0.75em;
 }
+
+/* Blog post bodies. Hand-written rather than a typography plugin: the site only
+   needs the handful of elements below, in the same zinc palette as everything
+   else. Colors are literal because Tailwind only emits the theme variables it
+   sees used in markup. */
+.prose {
+  --prose-body: #3f3f46; /* zinc-700 */
+  --prose-heading: #18181b; /* zinc-900 */
+  --prose-muted: #71717a; /* zinc-500 */
+  --prose-border: #e4e4e7; /* zinc-200 */
+  --prose-surface: #f4f4f5; /* zinc-100 */
+
+  color: var(--prose-body);
+  line-height: 1.75;
+}
+
+@media (prefers-color-scheme: dark) {
+  .prose {
+    --prose-body: #d4d4d8; /* zinc-300 */
+    --prose-heading: #ffffff;
+    --prose-muted: #a1a1aa; /* zinc-400 */
+    --prose-border: #27272a; /* zinc-800 */
+    --prose-surface: #27272a; /* zinc-800 */
+  }
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2,
+.prose h3 {
+  color: var(--prose-heading);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin-top: 2em;
+}
+
+.prose h2 {
+  font-size: 1.25em;
+}
+
+.prose h3 {
+  font-size: 1.05em;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.6em;
+}
+
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose strong {
+  color: var(--prose-heading);
+  font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose li::marker {
+  color: var(--prose-muted);
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--prose-border);
+  padding-left: 1em;
+  color: var(--prose-muted);
+}
+
+.prose code {
+  background: var(--prose-surface);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+}
+
+/* Code blocks keep Shiki's own background and need no padding hack. */
+.prose pre {
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+  font-size: 0.875em;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--prose-border);
+  margin: 2.5em 0;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.925em;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--prose-border);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+.prose th {
+  color: var(--prose-heading);
+  font-weight: 600;
+}
+
+/* Shiki emits both code themes as CSS variables; follow the OS preference. */
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+  }
+}

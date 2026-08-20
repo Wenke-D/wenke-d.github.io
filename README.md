@@ -21,6 +21,7 @@ TypeScript involved, and no CSS classes to remember: links written as
 | --- | --- |
 | Name, role, affiliation, bio | `src/content/profile/en.md`, `zh.md` |
 | News items | `src/content/news/<lang>/*.md` — one file per item |
+| Blog posts | `src/content/posts/<lang>/*.md` — one file per post |
 | Publications | `src/content/publications.yaml` |
 | Email, external links | `src/content/site.yaml` |
 | Interface labels ("News", "All →") | `src/content/ui.yaml` |
@@ -41,6 +42,25 @@ date: 2026-11-20
 ---
 
 Gave a talk at [SC26](https://sc26.supercomputing.org/). 🎉
+```
+
+**Write a blog post:** copy `src/content/posts/en/hello-world.md`, rename it —
+the file name becomes the URL (`why-nix.md` → `/blog/why-nix`) — and write. Set
+`draft: false` to publish; drafts are visible under `npm run dev` and left out
+of the build. Posts are per language and independent: writing one in Chinese
+only is fine. The homepage shows a **Blog** link as soon as one post is
+published in that language.
+
+```md
+---
+title: Why Nix
+date: 2026-11-20
+description: One line, shown under the title in the list. Optional.
+draft: false
+---
+
+Body in Markdown — headings from `##` down, lists, quotes, and
+syntax-highlighted code blocks.
 ```
 
 **Add a publication:** append an entry to `src/content/publications.yaml`.

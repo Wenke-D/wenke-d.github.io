@@ -8,7 +8,9 @@ en:
   selectedHeading: Selected Publications
   allLink: All →
   pubsTitle: Publications
+  blogTitle: Blog
   backHome: ← Home
+  backBlog: ← Blog
 
 zh:
   label: 中文
@@ -18,4 +20,6 @@ zh:
   selectedHeading: 代表性论文
   allLink: 全部 →
   pubsTitle: 论文发表
+  blogTitle: 博客
   backHome: ← 返回首页
+  backBlog: ← 返回博客
