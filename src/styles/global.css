@@ -336,16 +336,44 @@ body.reading .page {
   font-weight: 600;
 }
 
-/* The footer theme switch. The selected option is marked by weight and colour
-   rather than a filled pill: it sits in a footer and should not outshout the
-   text above it. */
+/* The footer theme switch: two icons, sun and moon. The one in force is in
+   the accent colour, the other is muted — the pair reads as a position rather
+   than as two buttons you might press at once. */
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .theme-switch button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--color-zinc-400);
   cursor: pointer;
 }
 
-.theme-switch button.is-selected {
+.theme-switch button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-switch button:hover {
   color: var(--color-accent);
-  font-weight: 600;
+}
+
+.theme-switch button[aria-pressed="true"] {
+  color: var(--color-accent);
+}
+
+.theme-switch button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
 }
 
 /* Shiki emits both themes as variables (defaultColor: false in the Astro

@@ -14,7 +14,6 @@ en:
   backBlog: ← Blog
   theme:
     label: Theme
-    system: System
     light: Light
     night: Night
 
@@ -32,6 +31,5 @@ zh:
   backBlog: ← 返回博客
   theme:
     label: 主题
-    system: 跟随系统
     light: 浅色
     night: 夜间

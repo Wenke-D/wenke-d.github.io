@@ -57,7 +57,6 @@ const ui = defineCollection({
     backBlog: z.string(),
     theme: z.object({
       label: z.string(),
-      system: z.string(),
       light: z.string(),
       night: z.string(),
     }),
