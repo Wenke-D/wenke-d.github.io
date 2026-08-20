@@ -16,6 +16,8 @@ export default defineConfig({
     // Two code themes; the CSS in src/styles/global.css picks one per OS theme.
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
+      // Emit both themes as CSS variables; global.css picks between them.
+      defaultColor: false,
     },
   },
   i18n: {

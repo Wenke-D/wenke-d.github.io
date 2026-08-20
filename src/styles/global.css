@@ -67,56 +67,71 @@ html {
 
 /* A post page puts its text on a white column and tints what is left and right
    of it, so the eye lands on the column instead of scanning an even field.
+   Only the post itself — the list and every other page stay open.
 
    The tint sits near the threshold of visible: enough to separate the band
    from what is beside it, not enough to announce itself as a colour. It is the
-   accent diluted to a trace — 3% of it in light, 6% in dark — so the hint of
-   blue belongs to the palette rather than arriving from nowhere. The hex on
-   the first line is the fallback for browsers without color-mix. */
+   accent diluted to a trace, so the hint of blue belongs to the palette rather
+   than arriving from nowhere.
+
+   Every colour is declared once, as light-dark(). The theme switch works by
+   setting `color-scheme` on <html>, and light-dark() answers to that — so a
+   token cannot go out of sync between the OS-preference case and the explicit
+   choice, which is exactly what happened when these were three parallel
+   blocks. The plain value on the line above each is the fallback for browsers
+   without light-dark(). */
 :root {
+  /* No `data-theme` means: follow the OS. */
   color-scheme: light dark;
 
   --page-tint: #f7fbfe;
-  --page-tint: color-mix(in oklab, var(--color-accent) 3%, white);
-  --reading-surface: #ffffff;
+  --page-tint: light-dark(
+    color-mix(in oklab, var(--color-accent) 3%, white),
+    color-mix(in oklab, var(--color-accent) 6%, #09090b)
+  );
 
-  --prose-body: #3f3f46; /* zinc-700 */
-  --prose-heading: #18181b; /* zinc-900 */
-  --prose-muted: #71717a; /* zinc-500 */
-  --prose-border: #e4e4e7; /* zinc-200 */
-  --prose-surface: #f4f4f5; /* zinc-100 */
+  --reading-surface: #ffffff;
+  --reading-surface: light-dark(#ffffff, #09090b);
+
+  --prose-body: #3f3f46;
+  --prose-body: light-dark(#3f3f46, #d4d4d8); /* zinc-700 / zinc-300 */
+
+  --prose-heading: #18181b;
+  --prose-heading: light-dark(#18181b, #ffffff); /* zinc-900 / white */
+
+  --prose-muted: #71717a;
+  --prose-muted: light-dark(#71717a, #a1a1aa); /* zinc-500 / zinc-400 */
+
+  --prose-border: #e4e4e7;
+  --prose-border: light-dark(#e4e4e7, #27272a); /* zinc-200 / zinc-800 */
+
+  --prose-surface: #f4f4f5;
+  --prose-surface: light-dark(#f4f4f5, #27272a); /* zinc-100 / zinc-800 */
+
+  /* Inline code sits in the same blue as the tint, a few steps stronger so it
+     reads as a chip. The text darkens with it: the accent itself scores 4.41
+     against that background, under the 4.5 body text needs, while the same
+     blue at 80% clears it at 6.2. */
+  --code-surface: #ebf3fc;
+  --code-surface: light-dark(
+    color-mix(in oklab, var(--color-accent) 8%, white),
+    color-mix(in oklab, var(--color-accent) 18%, #09090b)
+  );
+
+  --code-ink: #0259ac;
+  --code-ink: light-dark(
+    color-mix(in oklab, var(--color-accent) 80%, black),
+    color-mix(in oklab, var(--color-accent) 60%, white)
+  );
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-  --page-tint: #0b1017;
-  --page-tint: color-mix(in oklab, var(--color-accent) 6%, #09090b);
-  --reading-surface: #09090b;
-
-  --prose-body: #d4d4d8; /* zinc-300 */
-  --prose-heading: #ffffff;
-  --prose-muted: #a1a1aa; /* zinc-400 */
-  --prose-border: #27272a; /* zinc-800 */
-  --prose-surface: #27272a; /* zinc-800 */
-  }
+/* The footer switch pins the scheme; every token above follows. */
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page-tint: #0b1017;
-  --page-tint: color-mix(in oklab, var(--color-accent) 6%, #09090b);
-  --reading-surface: #09090b;
-
-  --prose-body: #d4d4d8; /* zinc-300 */
-  --prose-heading: #ffffff;
-  --prose-muted: #a1a1aa; /* zinc-400 */
-  --prose-border: #27272a; /* zinc-800 */
-  --prose-surface: #27272a; /* zinc-800 */
-}
-
-:root[data-theme="light"] {
-  color-scheme: light;
 }
 
 /* The white runs the full height of the page as one band, with the tint on
@@ -231,8 +246,10 @@ body.reading .page {
   color: var(--prose-muted);
 }
 
-.prose code {
-  background: var(--prose-surface);
+.prose code,
+.rich code {
+  background: var(--code-surface);
+  color: var(--code-ink);
   border-radius: 4px;
   padding: 0.15em 0.35em;
   font-size: 0.9em;
@@ -247,8 +264,11 @@ body.reading .page {
   line-height: 1.6;
 }
 
+/* Inside a code block Shiki does the colouring; the chip styles must not
+   bleed into it. */
 .prose pre code {
   background: none;
+  color: inherit;
   padding: 0;
   font-size: inherit;
 }
@@ -297,19 +317,12 @@ body.reading .page {
   font-weight: 600;
 }
 
-/* Shiki emits both code themes as CSS variables; pick one the same way. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .astro-code,
-  :root:not([data-theme="light"]) .astro-code span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-  }
-}
-
-:root[data-theme="dark"] .astro-code,
-:root[data-theme="dark"] .astro-code span {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
+/* Shiki emits both themes as variables (defaultColor: false in the Astro
+   config), so the code block picks one the same way everything else does. */
+.astro-code,
+.astro-code span {
+  color: light-dark(var(--shiki-light), var(--shiki-dark));
+  background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
 }
 
 /* Same arrow as <ExternalLink>, for links written in Markdown. Drawn as a mask
