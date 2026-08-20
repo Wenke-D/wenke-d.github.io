@@ -17,10 +17,10 @@ const { Content } = await render(post);
 const blogUrl = getRelativeLocaleUrl(lang, "blog");
 ---
 
-<Layout lang={lang} title={post.data.title} description={post.data.description}>
+<Layout lang={lang} title={post.data.title} description={post.data.description} reading>
   <a class="text-sm text-accent hover:underline" href={blogUrl}>{t.backBlog}</a>
 
-  <article class="post-surface mt-6">
+  <article class="reading-surface mt-6">
     <h1 class="text-2xl font-semibold tracking-tight text-balance text-zinc-900 dark:text-white">
       {post.data.title}
     </h1>

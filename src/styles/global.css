@@ -48,39 +48,42 @@ html {
   margin-top: 0.75em;
 }
 
-/* The reading surface on a post page. A warm off-white panel with a hairline
-   edge: on the plain page background the column had nothing holding it, and
-   the eye had no boundary to settle against. Only posts get this — the
-   homepage stays open. */
-.post-surface {
-  background: #faf7f0;
-  border: 1px solid #eae2d4;
+/* Reading pages (the blog) put the content on a white column and tint what is
+   left and right of it, so the eye lands on the column instead of scanning an
+   even field. The tint is the accent hue at very low chroma — a colour the
+   site already uses, just far lighter — rather than a warm neutral that
+   appears nowhere else.
+
+   The rule in both themes: the content keeps the neutral extreme (white,
+   near-black) and the surroundings carry the tint. */
+:root {
+  --page-tint: oklch(0.968 0.014 255);
+  --reading-surface: #ffffff;
+  --reading-edge: oklch(0.915 0.025 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-tint: oklch(0.205 0.018 255);
+    --reading-surface: #09090b;
+    --reading-edge: oklch(0.28 0.022 255);
+  }
+}
+
+body.reading {
+  background: var(--page-tint);
+}
+
+.reading-surface {
+  background: var(--reading-surface);
+  border: 1px solid var(--reading-edge);
   border-radius: 14px;
   padding: 2rem 1.5rem;
 }
 
 @media (min-width: 640px) {
-  .post-surface {
+  .reading-surface {
     padding: 2.75rem 3rem;
-  }
-}
-
-/* Inline code and rules inside the panel take a warm tint too: the default
-   zinc greys read as dirty against cream. */
-.post-surface .prose {
-  --prose-surface: #f0eade;
-  --prose-border: #e2d9c8;
-}
-
-@media (prefers-color-scheme: dark) {
-  .post-surface {
-    background: #1a1917;
-    border-color: #2b2823;
-  }
-
-  .post-surface .prose {
-    --prose-surface: #262320;
-    --prose-border: #322e28;
   }
 }
 

@@ -16,13 +16,14 @@ const posts = await getPosts(lang);
 const homeUrl = getRelativeLocaleUrl(lang, "");
 ---
 
-<Layout lang={lang} title={t.blogTitle}>
+<Layout lang={lang} title={t.blogTitle} reading>
   <a class="text-sm text-accent hover:underline" href={homeUrl}>{t.backHome}</a>
-  <h1 class="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
-    {t.blogTitle}
-  </h1>
+  <div class="reading-surface mt-6">
+    <h1 class="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+      {t.blogTitle}
+    </h1>
 
-  <ul class="mt-8 space-y-8">
+    <ul class="mt-8 space-y-8">
     {
       posts.map((post) => (
         <li>
@@ -48,6 +49,7 @@ const homeUrl = getRelativeLocaleUrl(lang, "");
           )}
         </li>
       ))
-    }
-  </ul>
+      }
+    </ul>
+  </div>
 </Layout>

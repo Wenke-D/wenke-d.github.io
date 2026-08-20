@@ -8,9 +8,11 @@ interface Props {
   lang: Lang;
   title?: string;
   description?: string;
+  /** Blog pages tint the page around a white content column. */
+  reading?: boolean;
 }
 
-const { lang, title, description } = Astro.props;
+const { lang, title, description, reading = false } = Astro.props;
 const profile = (await getEntry("profile", lang))!.data;
 // Homepage tab: "Name · Role". Subpages: "Page · Name".
 const pageTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
@@ -30,7 +32,12 @@ const desc = description ?? profile.summary;
     <meta property="og:description" content={desc} />
     <meta property="og:type" content="website" />
   </head>
-  <body class="min-h-screen bg-white text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-200">
+  <body
+    class:list={[
+      "min-h-screen bg-white text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-200",
+      reading && "reading",
+    ]}
+  >
     <div class="mx-auto max-w-2xl px-6 py-12 sm:py-16">
       <slot />
       <footer class="mt-20 border-t border-zinc-200 pt-6 text-sm text-zinc-500 dark:border-zinc-800">
