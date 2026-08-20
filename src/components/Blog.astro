@@ -26,7 +26,15 @@ const homeUrl = getRelativeLocaleUrl(lang, "");
     {
       posts.map((post) => (
         <li>
-          <p class="text-sm text-zinc-400">{fullDate(lang, post.data.date)}</p>
+          <p class="flex items-center gap-2 text-sm text-zinc-400">
+            {fullDate(lang, post.data.date)}
+            {/* Drafts are only ever in this list under `npm run dev`. */}
+            {post.data.draft && (
+              <span class="rounded border border-dashed border-zinc-300 px-1.5 py-0.5 text-xs text-zinc-500 dark:border-zinc-700">
+                {t.draftLabel}
+              </span>
+            )}
+          </p>
           <h2 class="mt-1 text-lg font-medium">
             <a
               class="text-zinc-900 hover:text-accent dark:text-white dark:hover:text-accent"

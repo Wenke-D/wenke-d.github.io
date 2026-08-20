@@ -82,6 +82,38 @@ publish: deploy, ci
     fi
     echo "live: {{site}}"
 
+# What is on the workbench: every post still marked `draft: true`, with how much
+# is written so far and when you last touched it. Drafts never reach the built
+# site, so this is the only place they are counted.
+drafts:
+    found=""
+    for file in src/content/posts/*/*.md; do
+      if [ ! -e "$file" ]; then
+        continue
+      fi
+      if ! grep -q '^draft: true' "$file"; then
+        continue
+      fi
+      found="yes"
+      lang=$(basename "$(dirname "$file")")
+      slug=$(basename "$file" .md)
+      title=$(sed -n 's/^title: *//p' "$file" | head -1)
+      body=$(sed '1,/^---$/d' "$file" | sed '1,/^---$/d')
+      # Chinese has no spaces between words, so count characters there instead.
+      if [ "$lang" = "zh" ]; then
+        count=$(printf '%s' "$body" | tr -d '[:space:]' | wc -m | tr -d ' ')
+        unit="chars"
+      else
+        count=$(printf '%s' "$body" | wc -w | tr -d ' ')
+        unit="words"
+      fi
+      touched=$(date -r "$file" '+%Y-%m-%d')
+      printf '%-3s %-28s %6s %-6s edited %s   %s\n' "$lang" "$slug" "$count" "$unit" "$touched" "$title"
+    done
+    if [ -z "$found" ]; then
+      echo "no drafts — everything in src/content/posts/ is published"
+    fi
+
 # Build locally first, then push. A broken build never reaches CI this way,
 # and an uncommitted change never gets silently left behind.
 deploy: build

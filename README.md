@@ -44,12 +44,21 @@ date: 2026-11-20
 Gave a talk at [SC26](https://sc26.supercomputing.org/). 🎉
 ```
 
-**Write a blog post:** copy `src/content/posts/en/hello-world.md`, rename it —
-the file name becomes the URL (`why-nix.md` → `/blog/why-nix`) — and write. Set
-`draft: false` to publish; drafts are visible under `npm run dev` and left out
-of the build. Posts are per language and independent: writing one in Chinese
-only is fine. The homepage shows a **Blog** link as soon as one post is
-published in that language.
+**Write a blog post:** `alors post why-nix` scaffolds one in both languages, or
+copy an existing file and rename it — the file name becomes the URL
+(`why-nix.md` → `/blog/why-nix`). Posts are per language and independent:
+writing one in Chinese only is fine. The homepage shows a **Blog** link as soon
+as one post is published in that language.
+
+**Drafts.** A post with `draft: true` is not published: it is left out of the
+build entirely, so it has no URL and appears in no list on the live site. While
+you work on it:
+
+- `npm run dev` shows it in the blog list and lets you open it, tagged *Draft*
+- `alors drafts` lists everything still unfinished, with a word count (character
+  count for Chinese) and when you last edited it
+
+Set `draft: false` when it is ready.
 
 ```md
 ---

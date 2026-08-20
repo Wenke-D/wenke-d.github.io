@@ -24,10 +24,15 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
     <h1 class="text-2xl font-semibold tracking-tight text-balance text-zinc-900 dark:text-white">
       {post.data.title}
     </h1>
-    <p class="mt-2 text-sm text-zinc-400">
+    <p class="mt-2 flex items-center gap-2 text-sm text-zinc-400">
       <time datetime={post.data.date.toISOString().slice(0, 10)}>
         {fullDate(lang, post.data.date)}
       </time>
+      {post.data.draft && (
+        <span class="rounded border border-dashed border-zinc-300 px-1.5 py-0.5 text-xs text-zinc-500 dark:border-zinc-700">
+          {t.draftLabel}
+        </span>
+      )}
     </p>
 
     <div class="prose mt-8">

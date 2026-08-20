@@ -51,6 +51,8 @@ const ui = defineCollection({
     allLink: z.string(),
     pubsTitle: z.string(),
     blogTitle: z.string(),
+    // Only ever rendered by `npm run dev`, on unpublished posts.
+    draftLabel: z.string(),
     backHome: z.string(),
     backBlog: z.string(),
   }),

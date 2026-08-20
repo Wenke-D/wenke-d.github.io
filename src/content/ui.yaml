@@ -9,6 +9,7 @@ en:
   allLink: All →
   pubsTitle: Publications
   blogTitle: Blog
+  draftLabel: Draft
   backHome: ← Home
   backBlog: ← Blog
 
@@ -21,5 +22,6 @@ zh:
   allLink: 全部 →
   pubsTitle: 论文发表
   blogTitle: 博客
+  draftLabel: 草稿
   backHome: ← 返回首页
   backBlog: ← 返回博客
