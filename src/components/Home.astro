@@ -1,28 +1,46 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import LangSwitcher from "./LangSwitcher.astro";
-import { site } from "../data/site";
-import { publications } from "../data/publications";
-import { ui, news as newsByLang, type Lang } from "../i18n";
+import type { Lang } from "../i18n";
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const t = ui[lang];
-const news = newsByLang[lang];
-const selected = publications.filter((p) => p.selected);
+
+// Everything below comes from src/content/ — see src/content.config.ts.
+const t = (await getEntry("ui", lang))!.data;
+const contact = (await getEntry("site", "contact"))!.data;
+const profileEntry = (await getEntry("profile", lang))!;
+const profile = profileEntry.data;
+const { Content: Bio } = await render(profileEntry);
+
+// News items live in src/content/news/<lang>/, newest first.
+const newsEntries = (await getCollection("news", (n) => n.id.startsWith(`${lang}/`)))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const monthYear = new Intl.DateTimeFormat(lang === "zh" ? "zh-CN" : "en-US", {
+  year: "numeric",
+  month: lang === "zh" ? "long" : "short",
+  timeZone: "UTC",
+});
+const news = await Promise.all(
+  newsEntries.map(async (n) => ({
+    date: monthYear.format(n.data.date),
+    Content: (await render(n)).Content,
+  })),
+);
+
+const selected = (await getCollection("publications", (p) => p.data.selected)).sort(
+  (a, b) => b.data.year - a.data.year,
+);
 
 // Render **bold** spans in author strings (used to bold your own name).
 function renderAuthors(authors: string): string {
   return authors.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
-
-const social = [
-  { label: t.nav.thesis, href: site.links.thesis },
-].filter((l) => l.href);
 
 const pubsUrl = getRelativeLocaleUrl(lang, "publications");
 ---
@@ -34,16 +52,16 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
   <header class="mt-6 flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
     <div>
       <h1 class="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
-        {t.name}
+        {profile.name}
       </h1>
       <p class="mt-1 text-lg text-zinc-600 dark:text-zinc-400">
-        {t.role}, {t.affiliation}
+        {profile.role}, {profile.affiliation}
       </p>
     </div>
     <!-- Drop your headshot at public/photo.jpg -->
     <img
       src="/photo.jpg"
-      alt={t.name}
+      alt={profile.name}
       width="112"
       height="112"
       class="h-28 w-28 shrink-0 rounded-full object-cover ring-1 ring-zinc-200 dark:ring-zinc-800"
@@ -52,19 +70,13 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
 
   <nav class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
     {/* Plain text, not a link: one click selects the whole address for copying. */}
-    <span class="select-all text-zinc-600 dark:text-zinc-400">{site.email}</span>
-    {
-      social.map((l) => (
-        <a class="text-accent hover:underline" href={l.href}>
-          {l.label}
-        </a>
-      ))
-    }
+    <span class="select-all text-zinc-600 dark:text-zinc-400">{contact.email}</span>
+    <a class="text-accent hover:underline" href={contact.thesis}>{t.nav.thesis}</a>
   </nav>
 
   <!-- About -->
-  <section class="mt-10 leading-relaxed">
-    <p>{t.blurb}</p>
+  <section class="rich mt-10 leading-relaxed">
+    <Bio />
   </section>
 
   <!-- News -->
@@ -72,10 +84,12 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
     <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">{t.newsHeading}</h2>
     <ul class="mt-3 space-y-2 text-sm">
       {
-        news.map((n) => (
+        news.map(({ date, Content }) => (
           <li class="flex gap-3">
-            <span class="w-20 shrink-0 text-zinc-400">{n.date}</span>
-            <span set:html={n.text} />
+            <span class="w-20 shrink-0 text-zinc-400">{date}</span>
+            <div class="rich">
+              <Content />
+            </div>
           </li>
         ))
       }
@@ -92,14 +106,14 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
     </div>
     <ul class="mt-4 space-y-6">
       {
-        selected.map((p) => (
+        selected.map(({ data: p }) => (
           <li>
             <h3 class="font-medium text-zinc-900 dark:text-white">{p.title}</h3>
             <p class="text-sm text-zinc-600 dark:text-zinc-400" set:html={renderAuthors(p.authors)} />
             <p class="text-sm italic text-zinc-500">
               {p.venue}, {p.year}
             </p>
-            {p.links && (
+            {p.links.length > 0 && (
               <p class="mt-1 flex gap-3 text-sm">
                 {p.links.map((l) => (
                   <a class="text-accent hover:underline" href={l.href}>

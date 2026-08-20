@@ -1,0 +1,16 @@
+# Publications, newest first. Add a new entry at the top when you publish.
+#
+#   id        internal name, any short slug — never shown on the page
+#   authors   wrap your own name in **double asterisks** to bold it
+#   selected  true = also show it on the homepage
+#   links     optional; as many as you like (PDF, code, slides, DOI…)
+
+- id: nix-repro-hpc-2026
+  title: Nix to the Rescue for a Reproducible HPC-AI Software Stack
+  authors: "**Wenke Du**, Jean-Marc Gratien, Raphaël Gayno, Bruno Raffin"
+  venue: 1st REPRO-HPC Workshop (co-located with ISC26)
+  year: 2026
+  selected: true
+  links:
+    - label: Workshop
+      href: https://repro-hpc.github.io/

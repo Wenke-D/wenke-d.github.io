@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { getCollection } from "astro:content";
 import { languages, type Lang } from "../i18n";
 
 interface Props {
@@ -9,11 +10,18 @@ interface Props {
 }
 
 const { lang, path = "" } = Astro.props;
+
+// Switcher labels ("English", "中文") come from src/content/ui.yaml.
+const labels = await getCollection("ui");
+const options = languages.map((code) => ({
+  code,
+  label: labels.find((l) => l.id === code)!.data.label,
+}));
 ---
 
 <nav class="flex justify-end gap-3 text-sm" aria-label="Language">
   {
-    Object.entries(languages).map(([code, label]) => (
+    options.map(({ code, label }) => (
       <a
         href={getRelativeLocaleUrl(code, path)}
         class={

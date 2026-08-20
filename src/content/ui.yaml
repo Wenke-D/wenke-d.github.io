@@ -1,0 +1,21 @@
+# Interface labels, both languages side by side so nothing drifts out of sync.
+# Everything you actually write (bio, news, publications) lives in the other files.
+en:
+  label: English            # name of this language in the switcher
+  nav:
+    thesis: Thesis
+  newsHeading: News
+  selectedHeading: Selected Publications
+  allLink: All →
+  pubsTitle: Publications
+  backHome: ← Home
+
+zh:
+  label: 中文
+  nav:
+    thesis: 博士课题
+  newsHeading: 近况
+  selectedHeading: 代表性论文
+  allLink: 全部 →
+  pubsTitle: 论文发表
+  backHome: ← 返回首页

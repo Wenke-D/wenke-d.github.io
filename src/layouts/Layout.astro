@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
-import { ui, type Lang } from "../i18n";
+import { getEntry } from "astro:content";
+import type { Lang } from "../i18n";
 
 interface Props {
   lang: Lang;
@@ -9,10 +10,10 @@ interface Props {
 }
 
 const { lang, title, description } = Astro.props;
-const t = ui[lang];
+const profile = (await getEntry("profile", lang))!.data;
 // Homepage tab: "Name · Role". Subpages: "Page · Name".
-const pageTitle = title ? `${title} · ${t.name}` : `${t.name} · ${t.role}`;
-const desc = description ?? t.blurb;
+const pageTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
+const desc = description ?? profile.summary;
 ---
 
 <!doctype html>
@@ -32,7 +33,7 @@ const desc = description ?? t.blurb;
     <div class="mx-auto max-w-2xl px-6 py-12 sm:py-16">
       <slot />
       <footer class="mt-20 border-t border-zinc-200 pt-6 text-sm text-zinc-500 dark:border-zinc-800">
-        © {new Date().getFullYear()} {t.name}. Built with{" "}
+        © {new Date().getFullYear()} {profile.name}. Built with{" "}
         <a class="text-accent hover:underline" href="https://astro.build">Astro</a>.
       </footer>
     </div>

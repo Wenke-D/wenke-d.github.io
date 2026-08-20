@@ -1,15 +1,16 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import { publications } from "../data/publications";
-import { ui, type Lang } from "../i18n";
+import type { Lang } from "../i18n";
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const t = ui[lang];
+const t = (await getEntry("ui", lang))!.data;
+const publications = (await getCollection("publications")).map((p) => p.data);
 
 function renderAuthors(authors: string): string {
   return authors.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
@@ -40,7 +41,7 @@ const homeUrl = getRelativeLocaleUrl(lang, "");
               <h3 class="font-medium text-zinc-900 dark:text-white">{p.title}</h3>
               <p class="text-sm text-zinc-600 dark:text-zinc-400" set:html={renderAuthors(p.authors)} />
               <p class="text-sm italic text-zinc-500">{p.venue}</p>
-              {p.links && (
+              {p.links.length > 0 && (
                 <p class="mt-1 flex gap-3 text-sm">
                   {p.links.map((l) => (
                     <a class="text-accent hover:underline" href={l.href}>

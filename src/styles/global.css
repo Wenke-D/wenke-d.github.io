@@ -9,3 +9,17 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Markdown coming from src/content/ (bio, news items): links pick up the site
+   accent automatically, so nothing in those files needs to carry CSS classes. */
+.rich a {
+  color: var(--color-accent);
+}
+
+.rich a:hover {
+  text-decoration: underline;
+}
+
+.rich p + p {
+  margin-top: 0.75em;
+}
