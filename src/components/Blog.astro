@@ -16,7 +16,7 @@ const posts = await getPosts(lang);
 const homeUrl = getRelativeLocaleUrl(lang, "");
 ---
 
-<Layout lang={lang} title={t.blogTitle} reading>
+<Layout lang={lang} title={t.blogTitle}>
   <a class="text-sm text-accent hover:underline" href={homeUrl}>{t.backHome}</a>
   <h1 class="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
     {t.blogTitle}

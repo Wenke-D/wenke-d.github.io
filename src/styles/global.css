@@ -48,9 +48,9 @@ html {
   margin-top: 0.75em;
 }
 
-/* Reading pages (the blog) put the content on a white column and tint what is
-   left and right of it, so the eye lands on the column instead of scanning an
-   even field. The tint is the accent hue at very low chroma — a colour the
+/* A post page puts its text on a white column and tints what is left and right
+   of it, so the eye lands on the column instead of scanning an even field.
+   Only the post itself — the list and every other page stay open. The tint is the accent hue at very low chroma — a colour the
    site already uses, just far lighter — rather than a warm neutral that
    appears nowhere else.
 
