@@ -36,7 +36,26 @@ html {
   --prose-surface: #f4f4f5; /* zinc-100 */
 
   color: var(--prose-body);
+  /* A line of running text is comfortable at 60-75 characters; the page
+     container alone gave the body about 85, which is where the eye starts
+     losing its place on the jump back to the next line. */
+  max-width: 64ch;
+  font-size: 1.0625rem;
   line-height: 1.75;
+}
+
+/* Chinese justifies cleanly: the characters are uniform width, so both edges
+   line up without opening gaps. English justified without hyphenation does
+   the opposite — it stretches word spacing into rivers — so it stays ragged. */
+.prose:lang(zh) {
+  text-align: justify;
+  text-justify: inter-ideograph;
+  line-height: 1.85;
+}
+
+/* Avoid a last line with a single word on it. */
+.prose p {
+  text-wrap: pretty;
 }
 
 @media (prefers-color-scheme: dark) {
