@@ -11,7 +11,9 @@ const t = (await getEntry("ui", lang))!.data.theme;
 ---
 
 {/* Two positions, no "system" button: the page follows the OS until the reader
-    touches this, and from then on their choice is what counts. */}
+    touches this, and from then on their choice wins — for this tab only. The
+    choice lives in sessionStorage, so it survives moving between pages and is
+    gone when the tab closes, and the next visit starts from the system again. */}
 <fieldset class="theme-switch" aria-label={t.label}>
   <button type="button" data-theme-option="light" aria-pressed="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -32,13 +34,14 @@ const t = (await getEntry("ui", lang))!.data.theme;
 
 <script>
   const KEY = "theme";
+  // sessionStorage, not localStorage: the choice is not meant to outlive the tab.
   const root = document.documentElement;
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-option]");
 
   /** What the page is actually showing right now. */
   function current(): "light" | "night" {
-    const stored = localStorage.getItem(KEY);
+    const stored = sessionStorage.getItem(KEY);
     if (stored === "light" || stored === "night") return stored;
     return prefersDark.matches ? "night" : "light";
   }
@@ -53,14 +56,14 @@ const t = (await getEntry("ui", lang))!.data.theme;
     button.addEventListener("click", () => {
       const choice = button.dataset.themeOption!;
       root.dataset.theme = choice;
-      localStorage.setItem(KEY, choice);
+      sessionStorage.setItem(KEY, choice);
       mark(choice);
     });
   }
 
   // While the choice is still automatic, keep up with the OS switching at dusk.
   prefersDark.addEventListener("change", () => {
-    if (!localStorage.getItem(KEY)) mark(current());
+    if (!sessionStorage.getItem(KEY)) mark(current());
   });
 
   mark(current());

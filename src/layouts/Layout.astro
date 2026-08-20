@@ -26,10 +26,11 @@ const desc = description ?? profile.summary;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {/* Runs before first paint: without it a stored dark choice would flash
-        the light theme on every navigation. */}
+    {/* Runs before first paint: without it a choice made in this tab would
+        flash the other theme on every navigation. sessionStorage, so it is
+        gone once the tab closes. */}
     <script is:inline>
-      const stored = localStorage.getItem("theme");
+      const stored = sessionStorage.getItem("theme");
       if (stored === "light" || stored === "night") {
         document.documentElement.dataset.theme = stored;
       }
