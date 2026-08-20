@@ -59,31 +59,31 @@ html {
 :root {
   --page-tint: oklch(0.968 0.014 255);
   --reading-surface: #ffffff;
-  --reading-edge: oklch(0.915 0.025 255);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --page-tint: oklch(0.205 0.018 255);
     --reading-surface: #09090b;
-    --reading-edge: oklch(0.28 0.022 255);
   }
 }
 
+/* The white runs the full height of the page as one band, with the tint on
+   either side of it — no card, no edge, nothing floating. Below 672px the band
+   is the whole viewport and the tint simply is not visible. */
 body.reading {
   background: var(--page-tint);
 }
 
-.reading-surface {
+body.reading .page {
   background: var(--reading-surface);
-  border: 1px solid var(--reading-edge);
-  border-radius: 14px;
-  padding: 2rem 1.5rem;
+  min-height: 100vh;
 }
 
 @media (min-width: 640px) {
-  .reading-surface {
-    padding: 2.75rem 3rem;
+  body.reading .page {
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }
 
