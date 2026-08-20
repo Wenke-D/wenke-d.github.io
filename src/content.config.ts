@@ -55,6 +55,12 @@ const ui = defineCollection({
     draftLabel: z.string(),
     backHome: z.string(),
     backBlog: z.string(),
+    theme: z.object({
+      label: z.string(),
+      system: z.string(),
+      light: z.string(),
+      dark: z.string(),
+    }),
   }),
 });
 

@@ -1,0 +1,60 @@
+---
+import { getEntry } from "astro:content";
+import type { Lang } from "../i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = (await getEntry("ui", lang))!.data.theme;
+
+const options = [
+  { value: "system", label: t.system },
+  { value: "light", label: t.light },
+  { value: "dark", label: t.dark },
+] as const;
+---
+
+<fieldset class="theme-switch flex items-center gap-1" data-theme-switch>
+  <legend class="sr-only">{t.label}</legend>
+  {
+    options.map(({ value, label }) => (
+      <button
+        type="button"
+        data-theme-option={value}
+        aria-pressed="false"
+        class="rounded px-2 py-1 text-xs text-zinc-500 hover:text-accent dark:text-zinc-400"
+      >
+        {label}
+      </button>
+    ))
+  }
+</fieldset>
+
+<script>
+  // "system" means: store nothing and let the media query decide.
+  const KEY = "theme";
+  const root = document.documentElement;
+
+  function apply(choice: string) {
+    if (choice === "light" || choice === "dark") {
+      root.dataset.theme = choice;
+      localStorage.setItem(KEY, choice);
+    } else {
+      delete root.dataset.theme;
+      localStorage.removeItem(KEY);
+    }
+    for (const button of document.querySelectorAll<HTMLButtonElement>("[data-theme-option]")) {
+      const selected = button.dataset.themeOption === choice;
+      button.setAttribute("aria-pressed", String(selected));
+      button.classList.toggle("is-selected", selected);
+    }
+  }
+
+  apply(localStorage.getItem(KEY) ?? "system");
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-theme-option]")) {
+    button.addEventListener("click", () => apply(button.dataset.themeOption!));
+  }
+</script>

@@ -12,6 +12,11 @@ en:
   draftLabel: Draft
   backHome: ← Home
   backBlog: ← Blog
+  theme:
+    label: Theme
+    system: System
+    light: Light
+    dark: Dark
 
 zh:
   label: 中文
@@ -25,3 +30,8 @@ zh:
   draftLabel: 草稿
   backHome: ← 返回首页
   backBlog: ← 返回博客
+  theme:
+    label: 主题
+    system: 跟随系统
+    light: 浅色
+    dark: 深色

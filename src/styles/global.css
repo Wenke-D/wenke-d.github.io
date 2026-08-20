@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+/* Three theme states, not two. `data-theme` is absent by default, which means
+   "follow the system"; the footer switch writes "light" or "dark" onto <html>
+   to override it. Every dark rule below is written twice for that reason —
+   once behind the media query (guarded so an explicit light choice wins) and
+   once behind the attribute (so an explicit dark choice wins on a light OS). */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
+    @slot;
+  }
+}
+
 /* Site-wide theme tokens. Tailwind v4 reads these via the @theme block. */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -50,22 +67,55 @@ html {
 
 /* A post page puts its text on a white column and tints what is left and right
    of it, so the eye lands on the column instead of scanning an even field.
-   Only the post itself — the list and every other page stay open. The tint is the accent hue at very low chroma — a colour the
-   site already uses, just far lighter — rather than a warm neutral that
-   appears nowhere else.
 
-   The rule in both themes: the content keeps the neutral extreme (white,
-   near-black) and the surroundings carry the tint. */
+   The tint is not a separate colour: it is the accent itself, diluted. Hand
+   picking a pale blue in OKLCH drifted a few degrees toward cyan and read as a
+   different family; mixing the accent into the page ground cannot drift. The
+   hex on the first line is the fallback for browsers without color-mix. */
 :root {
-  --page-tint: oklch(0.968 0.014 255);
+  color-scheme: light dark;
+
+  --page-tint: #dfebfb;
+  --page-tint: color-mix(in oklab, var(--color-accent) 14%, white);
   --reading-surface: #ffffff;
+
+  --prose-body: #3f3f46; /* zinc-700 */
+  --prose-heading: #18181b; /* zinc-900 */
+  --prose-muted: #71717a; /* zinc-500 */
+  --prose-border: #e4e4e7; /* zinc-200 */
+  --prose-surface: #f4f4f5; /* zinc-100 */
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --page-tint: oklch(0.205 0.018 255);
-    --reading-surface: #09090b;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  --page-tint: #081728;
+  --page-tint: color-mix(in oklab, var(--color-accent) 14%, #09090b);
+  --reading-surface: #09090b;
+
+  --prose-body: #d4d4d8; /* zinc-300 */
+  --prose-heading: #ffffff;
+  --prose-muted: #a1a1aa; /* zinc-400 */
+  --prose-border: #27272a; /* zinc-800 */
+  --prose-surface: #27272a; /* zinc-800 */
   }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-tint: #081728;
+  --page-tint: color-mix(in oklab, var(--color-accent) 14%, #09090b);
+  --reading-surface: #09090b;
+
+  --prose-body: #d4d4d8; /* zinc-300 */
+  --prose-heading: #ffffff;
+  --prose-muted: #a1a1aa; /* zinc-400 */
+  --prose-border: #27272a; /* zinc-800 */
+  --prose-surface: #27272a; /* zinc-800 */
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* The white runs the full height of the page as one band, with the tint on
@@ -92,12 +142,6 @@ body.reading .page {
    else. Colors are literal because Tailwind only emits the theme variables it
    sees used in markup. */
 .prose {
-  --prose-body: #3f3f46; /* zinc-700 */
-  --prose-heading: #18181b; /* zinc-900 */
-  --prose-muted: #71717a; /* zinc-500 */
-  --prose-border: #e4e4e7; /* zinc-200 */
-  --prose-surface: #f4f4f5; /* zinc-100 */
-
   color: var(--prose-body);
   /* A line of running text is comfortable at 60-75 characters; the page
      container alone gave the body about 85, which is where the eye starts
@@ -119,16 +163,6 @@ body.reading .page {
 /* Avoid a last line with a single word on it. */
 .prose p {
   text-wrap: pretty;
-}
-
-@media (prefers-color-scheme: dark) {
-  .prose {
-    --prose-body: #d4d4d8; /* zinc-300 */
-    --prose-heading: #ffffff;
-    --prose-muted: #a1a1aa; /* zinc-400 */
-    --prose-border: #27272a; /* zinc-800 */
-    --prose-surface: #27272a; /* zinc-800 */
-  }
 }
 
 .prose > * + * {
@@ -250,13 +284,31 @@ body.reading .page {
   font-weight: 600;
 }
 
-/* Shiki emits both code themes as CSS variables; follow the OS preference. */
+/* The footer theme switch. The selected option is marked by weight and colour
+   rather than a filled pill: it sits in a footer and should not outshout the
+   text above it. */
+.theme-switch button {
+  cursor: pointer;
+}
+
+.theme-switch button.is-selected {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Shiki emits both code themes as CSS variables; pick one the same way. */
 @media (prefers-color-scheme: dark) {
-  .astro-code,
-  .astro-code span {
+  :root:not([data-theme="light"]) .astro-code,
+  :root:not([data-theme="light"]) .astro-code span {
     color: var(--shiki-dark) !important;
     background-color: var(--shiki-dark-bg) !important;
   }
+}
+
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
 }
 
 /* Same arrow as <ExternalLink>, for links written in Markdown. Drawn as a mask
