@@ -21,7 +21,6 @@ function renderAuthors(authors: string): string {
 }
 
 const social = [
-  { label: t.nav.email, href: `mailto:${site.email}` },
   { label: t.nav.thesis, href: site.links.thesis },
 ].filter((l) => l.href);
 
@@ -51,7 +50,9 @@ const pubsUrl = getRelativeLocaleUrl(lang, "publications");
     />
   </header>
 
-  <nav class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+  <nav class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+    {/* Plain text, not a link: one click selects the whole address for copying. */}
+    <span class="select-all text-zinc-600 dark:text-zinc-400">{site.email}</span>
     {
       social.map((l) => (
         <a class="text-accent hover:underline" href={l.href}>

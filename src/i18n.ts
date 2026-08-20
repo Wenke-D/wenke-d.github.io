@@ -14,7 +14,7 @@ export const ui = {
     affiliation: "Inria, IFPEN & Université Grenoble Alpes",
     blurb:
       "I'm a PhD student (2024–2027) with the DataMove team at Inria and IFP Energies Nouvelles, affiliated with Université Grenoble Alpes. My research designs a deep neural network (DNN) inference framework for massively parallel, exascale simulations — bringing trained models into HPC codes written in C, C++, and Fortran. I work at the intersection of deep learning, graph neural networks, and high-performance computing, with applications to computational fluid dynamics (CFD). I'm advised by Bruno Raffin, Jean-Marc Gratien, and Raphaël Gayno.",
-    nav: { email: "Email", thesis: "Thesis" },
+    nav: { thesis: "Thesis" },
     newsHeading: "News",
     selectedHeading: "Selected Publications",
     allLink: "All →",
@@ -27,7 +27,7 @@ export const ui = {
     affiliation: "Inria、IFPEN 与格勒诺布尔阿尔卑斯大学",
     blurb:
       "我是一名博士研究生(2024–2027),就读于法国国家信息与自动化研究所(Inria)DataMove 团队与法国石油研究院(IFPEN),隶属于格勒诺布尔阿尔卑斯大学。我的研究致力于为面向百亿亿次(Exascale)的大规模并行仿真设计深度神经网络(DNN)推理框架,将训练好的模型引入以 C、C++ 和 Fortran 编写的高性能计算(HPC)代码中。我的研究方向位于深度学习、图神经网络与高性能计算的交叉领域,并应用于计算流体力学(CFD)。我的导师为 Bruno Raffin、Jean-Marc Gratien 与 Raphaël Gayno。",
-    nav: { email: "邮箱", thesis: "博士课题" },
+    nav: { thesis: "博士课题" },
     newsHeading: "近况",
     selectedHeading: "代表性论文",
     allLink: "全部 →",
