@@ -97,8 +97,12 @@ drafts:
       found="yes"
       lang=$(basename "$(dirname "$file")")
       slug=$(basename "$file" .md)
-      title=$(sed -n 's/^title: *//p' "$file" | head -1)
-      body=$(sed '1,/^---$/d' "$file" | sed '1,/^---$/d')
+      title=$(sed -n 's/^title: *//p' "$file" | head -1 | sed 's/^"\(.*\)"$/\1/')
+      # Everything outside the frontmatter block. Doing this with two seds
+      # silently emptied the body when the post had no `---` of its own.
+      body=$(awk 'NR == 1 && $0 == "---" { inside = 1; next }
+                  inside && $0 == "---" { inside = 0; next }
+                  !inside { print }' "$file")
       # Chinese has no spaces between words, so count characters there instead.
       if [ "$lang" = "zh" ]; then
         count=$(printf '%s' "$body" | tr -d '[:space:]' | wc -m | tr -d ' ')
