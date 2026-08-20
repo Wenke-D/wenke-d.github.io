@@ -54,9 +54,10 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
       <h1 class="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
         {profile.name}
       </h1>
-      <p class="mt-1 text-lg text-zinc-600 dark:text-zinc-400">
-        {profile.role}, {profile.affiliation}
-      </p>
+      <p class="mt-1 text-lg text-zinc-600 dark:text-zinc-400">{profile.role}</p>
+      <p class="mt-0.5 text-base text-zinc-600 dark:text-zinc-400">{profile.affiliation}</p>
+      {/* Plain text, not a mailto link: one click selects the whole address. */}
+      <p class="mt-2 select-all text-sm text-zinc-500">{contact.email}</p>
     </div>
     <!-- Drop your headshot at public/photo.jpg -->
     <img
@@ -69,8 +70,6 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
   </header>
 
   <nav class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-    {/* Plain text, not a link: one click selects the whole address for copying. */}
-    <span class="select-all text-zinc-600 dark:text-zinc-400">{contact.email}</span>
     {hasPosts && <a class="text-accent hover:underline" href={blogUrl}>{t.blogTitle}</a>}
     <a class="text-accent hover:underline" href={contact.thesis}>{t.nav.thesis}</a>
   </nav>
