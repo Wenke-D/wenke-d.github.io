@@ -12,5 +12,7 @@
   year: 2026
   selected: true
   links:
+    - label: Paper
+      href: https://hal.science/hal-05705881v1
     - label: Workshop
       href: https://repro-hpc.github.io/
