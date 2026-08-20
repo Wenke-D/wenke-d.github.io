@@ -1,0 +1,119 @@
+# Tasks for this site. Run `alors` to list them.
+#
+# The site is a static Astro build. Pushing to main is the deploy:
+# .github/workflows/deploy.yml builds it and publishes to GitHub Pages.
+
+site   := https://wenke-d.github.io
+branch := main
+
+# Install dependencies the way CI does — exact versions from package-lock.json.
+install:
+    npm ci
+
+# Dev server on http://localhost:4321. Draft posts are visible here.
+dev:
+    npm run dev
+
+# Production build into ./dist. Content schemas are validated here, so a typo
+# in a YAML field or a missing frontmatter key fails now rather than in CI.
+build:
+    npm run build
+
+# Serve ./dist exactly as it will be deployed.
+preview: build
+    npm run preview
+
+# Start a blog post in both languages, dated today, as drafts.
+# Usage: alors post why-nix
+post slug:
+    for lang in en zh; do
+      file="src/content/posts/$lang/{{slug}}.md"
+      if [ -e "$file" ]; then
+        echo "already there: $file"
+        continue
+      fi
+      {
+        echo "---"
+        echo "title: {{slug}}"
+        echo "date: $(date +%F)"
+        echo "# description: one line shown under the title in the list (optional)"
+        echo "draft: true"
+        echo "---"
+        echo
+      } > "$file"
+      echo "created $file"
+    done
+    echo "drafts stay out of the build until you set draft: false"
+
+# Start a news item in both languages. The file name gets a date prefix to keep
+# the directory readable; ordering itself comes from the date field inside.
+# Usage: alors news repro-hpc
+news slug:
+    for lang in en zh; do
+      file="src/content/news/$lang/$(date +%Y-%m)-{{slug}}.md"
+      if [ -e "$file" ]; then
+        echo "already there: $file"
+        continue
+      fi
+      {
+        echo "---"
+        echo "date: $(date +%F)"
+        echo "---"
+        echo
+      } > "$file"
+      echo "created $file"
+    done
+
+# Publish: build, push, wait for the GitHub Actions deploy, check the live site.
+# This is the whole release, one command. Each step is also runnable on its own.
+publish: deploy, ci
+    sleep 3
+    failed=""
+    for path in / /publications/ /blog/ /zh/ /zh/publications/ /zh/blog/ /favicon.svg; do
+      code=$(curl -s -o /dev/null -w '%{http_code}' "{{site}}$path")
+      echo "  $code  {{site}}$path"
+      if [ "$code" != "200" ]; then
+        failed="$failed $path"
+      fi
+    done
+    if [ -n "$failed" ]; then
+      echo "not serving 200:$failed"
+      exit 1
+    fi
+    echo "live: {{site}}"
+
+# Build locally first, then push. A broken build never reaches CI this way,
+# and an uncommitted change never gets silently left behind.
+deploy: build
+    if [ -n "$(git status --porcelain)" ]; then
+      echo "uncommitted changes — commit them first:"
+      git status --short
+      exit 1
+    fi
+    git push origin {{branch}}
+
+# Follow the GitHub Actions run for the commit currently checked out. Waits for
+# the run to appear first: it takes a few seconds to register after a push.
+ci:
+    sha=$(git rev-parse HEAD)
+    run=""
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+      run=$(gh run list --limit 20 --json databaseId,headSha --jq "[.[] | select(.headSha == \"$sha\")][0].databaseId // empty")
+      if [ -n "$run" ]; then
+        break
+      fi
+      sleep 3
+    done
+    if [ -z "$run" ]; then
+      echo "no workflow run found for $sha"
+      exit 1
+    fi
+    gh run watch "$run" --exit-status
+
+# Open the live site.
+open:
+    open {{site}}
+
+# Drop build output and Astro's caches.
+clean:
+    rm -rf dist .astro
