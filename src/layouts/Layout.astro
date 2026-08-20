@@ -30,7 +30,7 @@ const desc = description ?? profile.summary;
         the light theme on every navigation. */}
     <script is:inline>
       const stored = localStorage.getItem("theme");
-      if (stored === "light" || stored === "dark") {
+      if (stored === "light" || stored === "night") {
         document.documentElement.dataset.theme = stored;
       }
     </script>

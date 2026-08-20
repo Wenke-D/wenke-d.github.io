@@ -59,7 +59,7 @@ const ui = defineCollection({
       label: z.string(),
       system: z.string(),
       light: z.string(),
-      dark: z.string(),
+      night: z.string(),
     }),
   }),
 });

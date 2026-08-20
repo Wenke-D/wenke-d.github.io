@@ -15,7 +15,8 @@ export default defineConfig({
     rehypePlugins: [rehypeExternalLinks],
     // Two code themes; the CSS in src/styles/global.css picks one per OS theme.
     shikiConfig: {
-      themes: { light: 'github-light', dark: 'github-dark' },
+      // A warm dark theme, to match the night palette rather than fight it.
+      themes: { light: 'github-light', dark: 'vitesse-dark' },
       // Emit both themes as CSS variables; global.css picks between them.
       defaultColor: false,
     },

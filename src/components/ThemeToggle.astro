@@ -12,7 +12,7 @@ const t = (await getEntry("ui", lang))!.data.theme;
 const options = [
   { value: "system", label: t.system },
   { value: "light", label: t.light },
-  { value: "dark", label: t.dark },
+  { value: "night", label: t.night },
 ] as const;
 ---
 
@@ -38,7 +38,7 @@ const options = [
   const root = document.documentElement;
 
   function apply(choice: string) {
-    if (choice === "light" || choice === "dark") {
+    if (choice === "light" || choice === "night") {
       root.dataset.theme = choice;
       localStorage.setItem(KEY, choice);
     } else {

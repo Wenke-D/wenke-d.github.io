@@ -16,7 +16,7 @@ en:
     label: Theme
     system: System
     light: Light
-    dark: Dark
+    night: Night
 
 zh:
   label: 中文
@@ -34,4 +34,4 @@ zh:
     label: 主题
     system: 跟随系统
     light: 浅色
-    dark: 深色
+    night: 夜间

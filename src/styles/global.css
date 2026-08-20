@@ -12,7 +12,7 @@
     }
   }
 
-  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
+  &:where(:root[data-theme="night"], :root[data-theme="night"] *) {
     @slot;
   }
 }
@@ -65,6 +65,32 @@ html {
   margin-top: 0.75em;
 }
 
+/* Night, not "dark". An inverted page is a floodlight in a dark room: pure
+   white text on pure black is the harshest thing a screen can show. This is
+   the other approach — the whole palette shifts warm, the way Night Shift
+   lays a yellow filter over the display, and the contrast comes down from
+   13.5:1 (white on near-black) to 9.4:1. Still far above the 4.5 that body
+   text needs; just not a light in the face.
+
+   The warm values ride on Tailwind's own colour tokens, so every `dark:`
+   utility already in the markup warms up with them — nothing to rewrite. */
+:root {
+  --color-white: light-dark(#ffffff, #e3dbce);
+  --color-zinc-200: light-dark(oklch(92% 0.004 286.32), #c6bcae);
+  --color-zinc-300: light-dark(oklch(87.1% 0.006 286.286), #b6ab9d);
+  --color-zinc-400: light-dark(oklch(70.5% 0.015 286.067), #a79d90);
+  --color-zinc-500: light-dark(oklch(55.2% 0.016 285.938), #92877b);
+  --color-zinc-600: light-dark(oklch(44.2% 0.017 285.786), #7d7367);
+  --color-zinc-700: light-dark(oklch(37% 0.013 285.805), #47413b);
+  --color-zinc-800: light-dark(oklch(27.4% 0.006 286.033), #3a342e);
+  --color-zinc-900: light-dark(oklch(21% 0.006 285.885), #2b251e);
+  --color-zinc-950: light-dark(oklch(14.1% 0.005 285.823), #1d1813);
+
+  /* Links go warm too — a saturated blue is the one thing a night palette
+     cannot keep. */
+  --color-accent: light-dark(oklch(0.55 0.18 255), #e1ac69);
+}
+
 /* A post page puts its text on a white column and tints what is left and right
    of it, so the eye lands on the column instead of scanning an even field.
    Only the post itself — the list and every other page stay open.
@@ -87,26 +113,26 @@ html {
   --page-tint: #f7fbfe;
   --page-tint: light-dark(
     color-mix(in oklab, var(--color-accent) 3%, white),
-    color-mix(in oklab, var(--color-accent) 6%, #09090b)
+    #28221b
   );
 
   --reading-surface: #ffffff;
-  --reading-surface: light-dark(#ffffff, #09090b);
+  --reading-surface: light-dark(#ffffff, #1d1813);
 
   --prose-body: #3f3f46;
-  --prose-body: light-dark(#3f3f46, #d4d4d8); /* zinc-700 / zinc-300 */
+  --prose-body: light-dark(#3f3f46, #c6bcae);
 
   --prose-heading: #18181b;
-  --prose-heading: light-dark(#18181b, #ffffff); /* zinc-900 / white */
+  --prose-heading: light-dark(#18181b, #e3dbce);
 
   --prose-muted: #71717a;
-  --prose-muted: light-dark(#71717a, #a1a1aa); /* zinc-500 / zinc-400 */
+  --prose-muted: light-dark(#71717a, #a79d90);
 
   --prose-border: #e4e4e7;
-  --prose-border: light-dark(#e4e4e7, #27272a); /* zinc-200 / zinc-800 */
+  --prose-border: light-dark(#e4e4e7, #3a342e);
 
   --prose-surface: #f4f4f5;
-  --prose-surface: light-dark(#f4f4f5, #27272a); /* zinc-100 / zinc-800 */
+  --prose-surface: light-dark(#f4f4f5, #31281f);
 
   /* Inline code sits in the same blue as the tint, a few steps stronger so it
      reads as a chip. The text darkens with it: the accent itself scores 4.41
@@ -115,13 +141,18 @@ html {
   --code-surface: #ebf3fc;
   --code-surface: light-dark(
     color-mix(in oklab, var(--color-accent) 8%, white),
-    color-mix(in oklab, var(--color-accent) 18%, #09090b)
+    #31281f
   );
+
+  /* Code blocks get their own ground so they read as a block on the page
+     rather than as text that happens to be monospaced. */
+  --code-block-surface: #f5f5f6;
+  --code-block-surface: light-dark(#f5f5f6, #28211a);
 
   --code-ink: #0259ac;
   --code-ink: light-dark(
     color-mix(in oklab, var(--color-accent) 80%, black),
-    color-mix(in oklab, var(--color-accent) 60%, white)
+    #e0b580
   );
 }
 
@@ -130,7 +161,7 @@ html {
   color-scheme: light;
 }
 
-:root[data-theme="dark"] {
+:root[data-theme="night"] {
   color-scheme: dark;
 }
 
@@ -319,10 +350,12 @@ body.reading .page {
 
 /* Shiki emits both themes as variables (defaultColor: false in the Astro
    config), so the code block picks one the same way everything else does. */
-.astro-code,
+.astro-code {
+  background-color: var(--code-block-surface);
+}
+
 .astro-code span {
   color: light-dark(var(--shiki-light), var(--shiki-dark));
-  background-color: light-dark(var(--shiki-light-bg), var(--shiki-dark-bg));
 }
 
 /* Same arrow as <ExternalLink>, for links written in Markdown. Drawn as a mask
