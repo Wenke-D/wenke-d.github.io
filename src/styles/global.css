@@ -68,14 +68,16 @@ html {
 /* A post page puts its text on a white column and tints what is left and right
    of it, so the eye lands on the column instead of scanning an even field.
 
-   The tint is deliberately near the threshold of visible: enough to separate
-   the band from what is beside it, not enough to read as a colour. Neutral
-   rather than a tinted blue — at this lightness a blue reads as a colour cast
-   on the screen rather than as part of the palette. */
+   The tint sits near the threshold of visible: enough to separate the band
+   from what is beside it, not enough to announce itself as a colour. It is the
+   accent diluted to a trace — 3% of it in light, 6% in dark — so the hint of
+   blue belongs to the palette rather than arriving from nowhere. The hex on
+   the first line is the fallback for browsers without color-mix. */
 :root {
   color-scheme: light dark;
 
-  --page-tint: #fafafa; /* zinc-50 */
+  --page-tint: #f7fbfe;
+  --page-tint: color-mix(in oklab, var(--color-accent) 3%, white);
   --reading-surface: #ffffff;
 
   --prose-body: #3f3f46; /* zinc-700 */
@@ -88,7 +90,8 @@ html {
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-  --page-tint: #121215;
+  --page-tint: #0b1017;
+  --page-tint: color-mix(in oklab, var(--color-accent) 6%, #09090b);
   --reading-surface: #09090b;
 
   --prose-body: #d4d4d8; /* zinc-300 */
@@ -101,7 +104,8 @@ html {
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page-tint: #121215;
+  --page-tint: #0b1017;
+  --page-tint: color-mix(in oklab, var(--color-accent) 6%, #09090b);
   --reading-surface: #09090b;
 
   --prose-body: #d4d4d8; /* zinc-300 */
