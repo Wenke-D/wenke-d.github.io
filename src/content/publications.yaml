@@ -5,6 +5,16 @@
 #   selected  true = also show it on the homepage
 #   links     optional; as many as you like (PDF, code, slides, DOI…)
 
+- id: coconut-ai4s-2026
+  title: "Coconut: An HPC-Native Inference Framework for Neural Surrogates in MPI Simulations"
+  authors: "**Wenke Du**, Jean-Marc Gratien, Raphaël Gayno, Bruno Raffin"
+  venue: 8th AI4S Workshop (co-located with SC26)
+  year: 2026
+  selected: true
+  links:
+    - label: Workshop
+      href: https://ai4s.github.io/
+
 - id: nix-repro-hpc-2026
   title: Nix to the Rescue for a Reproducible HPC-AI Software Stack
   authors: "**Wenke Du**, Jean-Marc Gratien, Raphaël Gayno, Bruno Raffin"
@@ -16,3 +26,17 @@
       href: https://hal.science/hal-05705881v1
     - label: Workshop
       href: https://repro-hpc.github.io/
+
+- id: distributed-actors-ocaml-2024
+  title: Distributed Actors in OCaml
+  authors: "**Wenke Du**, Gabriel Radanne, Ludovic Henrio"
+  venue: OCaml Workshop (co-located with ICFP 2024)
+  year: 2024
+  selected: true
+  links:
+    - label: Paper
+      href: https://hal.science/hal-04794441v1
+    - label: Video
+      href: https://www.youtube.com/watch?v=OuQqblCxJ2Y
+    - label: Workshop
+      href: https://icfp24.sigplan.org/home/ocaml-2024
