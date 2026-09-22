@@ -36,7 +36,5 @@
   links:
     - label: Paper
       href: https://hal.science/hal-04794441v1
-    - label: Video
-      href: https://www.youtube.com/watch?v=OuQqblCxJ2Y
     - label: Workshop
       href: https://icfp24.sigplan.org/home/ocaml-2024
