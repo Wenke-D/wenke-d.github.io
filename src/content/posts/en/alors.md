@@ -1,7 +1,7 @@
 ---
-title: "A project CLI: alors"
+title: "alors - A project CLI: "
 date: 2026-08-20
-description: Putting the commands you type every day behind a CLI that belongs to the project.
+description: Putting the commands you type every day toghther.
 draft: true
 ---
 
