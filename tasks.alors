@@ -65,7 +65,6 @@ news slug:
     done
 
 # Publish: build, push, wait for the GitHub Actions deploy, check the live site.
-# This is the whole release, one command. Each step is also runnable on its own.
 publish: deploy, ci
     sleep 3
     failed=""
