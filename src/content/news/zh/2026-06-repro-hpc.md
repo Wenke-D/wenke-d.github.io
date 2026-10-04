@@ -1,5 +1,0 @@
----
-date: 2026-06-01
----
-
-论文被 [第一届 REPRO-HPC 研讨会](https://repro-hpc.github.io/)（与 ISC26 同期举办）接收，并作了报告。🎉

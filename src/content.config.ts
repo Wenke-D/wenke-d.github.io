@@ -4,10 +4,10 @@
 import { defineCollection, z } from "astro:content";
 import { file, glob } from "astro/loaders";
 
-// Name, role and the homepage bio — one Markdown file per language.
-// The body of the file is the bio; Markdown links and emphasis work there.
+// The profile supplies the homepage bio and metadata for all pages.
+// Markdown links and emphasis work in the bio.
 const profile = defineCollection({
-  loader: glob({ pattern: "*.md", base: "./src/content/profile" }),
+  loader: glob({ pattern: "profile.md", base: "./src/content" }),
   schema: z.object({
     name: z.string(),
     role: z.string(),
@@ -16,20 +16,19 @@ const profile = defineCollection({
   }),
 });
 
-// One Markdown file per news item, filed under its language: news/en/*.md.
+// One Markdown file per homepage news item: news/*.md.
 // The file name is yours to choose; ordering comes from `date`.
 const news = defineCollection({
-  loader: glob({ pattern: "*/*.md", base: "./src/content/news" }),
+  loader: glob({ pattern: "*.md", base: "./src/content/news" }),
   schema: z.object({
     date: z.coerce.date(),
   }),
 });
 
-// Blog posts, filed under their language: posts/en/*.md. The file name becomes
-// the URL (posts/en/why-nix.md -> /blog/why-nix). A post exists independently in
-// each language — there is no requirement to write both.
+// Blog posts live in posts/*.md. The file name becomes the URL:
+// posts/why-nix.md -> /blog/why-nix.
 const posts = defineCollection({
-  loader: glob({ pattern: "*/*.md", base: "./src/content/posts" }),
+  loader: glob({ pattern: "*.md", base: "./src/content/posts" }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
@@ -40,11 +39,10 @@ const posts = defineCollection({
   }),
 });
 
-// Interface labels, keyed by language code.
+// Interface labels, stored in a single "main" entry.
 const ui = defineCollection({
   loader: file("src/content/ui.yaml"),
   schema: z.object({
-    label: z.string(),
     nav: z.object({ thesis: z.string() }),
     newsHeading: z.string(),
     selectedHeading: z.string(),

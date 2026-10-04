@@ -1,7 +1,6 @@
-# Interface labels, both languages side by side so nothing drifts out of sync.
+# Interface labels for the site.
 # Everything you actually write (bio, news, publications) lives in the other files.
-en:
-  label: English            # name of this language in the switcher
+main:
   nav:
     thesis: Thesis
   newsHeading: News
@@ -16,20 +15,3 @@ en:
     label: Theme
     light: Light
     night: Night
-
-zh:
-  label: 中文
-  nav:
-    thesis: 博士课题
-  newsHeading: 近况
-  selectedHeading: 代表性论文
-  allLink: 全部 →
-  pubsTitle: 论文发表
-  blogTitle: 博客
-  draftLabel: 草稿
-  backHome: ← 返回首页
-  backBlog: ← 返回博客
-  theme:
-    label: 主题
-    light: 浅色
-    night: 夜间

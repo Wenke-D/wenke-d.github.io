@@ -1,33 +1,24 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import LangSwitcher from "./LangSwitcher.astro";
-import type { Lang } from "../i18n";
 import { monthYear } from "../lib/date";
 import { getPosts } from "../lib/posts";
 import { renderAuthors } from "../lib/authors";
 import ExternalLink from "./ExternalLink.astro";
 
-interface Props {
-  lang: Lang;
-}
-
-const { lang } = Astro.props;
-
 // Everything below comes from src/content/ — see src/content.config.ts.
-const t = (await getEntry("ui", lang))!.data;
+const t = (await getEntry("ui", "main"))!.data;
 const contact = (await getEntry("site", "contact"))!.data;
-const profileEntry = (await getEntry("profile", lang))!;
+const profileEntry = (await getEntry("profile", "profile"))!;
 const profile = profileEntry.data;
 const { Content: Bio } = await render(profileEntry);
 
-// News items live in src/content/news/<lang>/, newest first.
-const newsEntries = (await getCollection("news", (n) => n.id.startsWith(`${lang}/`)))
+// Homepage news, newest first.
+const newsEntries = (await getCollection("news"))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const news = await Promise.all(
   newsEntries.map(async (n) => ({
-    date: monthYear(lang, n.data.date),
+    date: monthYear(n.data.date),
     Content: (await render(n)).Content,
   })),
 );
@@ -36,15 +27,13 @@ const selected = (await getCollection("publications", (p) => p.data.selected)).s
   (a, b) => b.data.year - a.data.year,
 );
 
-const pubsUrl = getRelativeLocaleUrl(lang, "publications");
+const pubsUrl = "/publications/";
 // The blog link only appears once there is something published to link to.
-const hasPosts = (await getPosts(lang)).length > 0;
-const blogUrl = getRelativeLocaleUrl(lang, "blog");
+const hasPosts = (await getPosts()).length > 0;
+const blogUrl = "/blog/";
 ---
 
-<Layout lang={lang}>
-  <LangSwitcher lang={lang} path="" />
-
+<Layout>
   <!-- Header -->
   <header class="mt-6 flex flex-col-reverse items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
     <div>

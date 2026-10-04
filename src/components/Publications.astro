@@ -1,17 +1,10 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection, getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import type { Lang } from "../i18n";
 import { renderAuthors } from "../lib/authors";
 import ExternalLink from "./ExternalLink.astro";
 
-interface Props {
-  lang: Lang;
-}
-
-const { lang } = Astro.props;
-const t = (await getEntry("ui", lang))!.data;
+const t = (await getEntry("ui", "main"))!.data;
 const publications = (await getCollection("publications")).map((p) => p.data);
 
 // Group by year, newest first.
@@ -20,10 +13,10 @@ for (const p of [...publications].sort((a, b) => b.year - a.year)) {
   byYear.set(p.year, [...(byYear.get(p.year) ?? []), p]);
 }
 
-const homeUrl = getRelativeLocaleUrl(lang, "");
+const homeUrl = "/";
 ---
 
-<Layout lang={lang} title={t.pubsTitle}>
+<Layout title={t.pubsTitle}>
   <a class="text-sm text-accent hover:underline" href={homeUrl}>{t.backHome}</a>
   <h1 class="mt-4 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
     {t.pubsTitle}

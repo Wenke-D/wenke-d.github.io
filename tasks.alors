@@ -23,52 +23,48 @@ build:
 preview: build
     npm run preview
 
-# Start a blog post in both languages, dated today, as drafts.
+# Start a blog post, dated today, as a draft.
 # Usage: alors post why-nix
 post slug:
-    for lang in en zh; do
-      file="src/content/posts/$lang/{{slug}}.md"
-      if [ -e "$file" ]; then
-        echo "already there: $file"
-        continue
-      fi
-      {
-        echo "---"
-        echo "title: {{slug}}"
-        echo "date: $(date +%F)"
-        echo "# description: one line shown under the title in the list (optional)"
-        echo "draft: true"
-        echo "---"
-        echo
-      } > "$file"
-      echo "created $file"
-    done
+    file="src/content/posts/{{slug}}.md"
+    if [ -e "$file" ]; then
+      echo "already there: $file"
+      exit 0
+    fi
+    {
+      echo "---"
+      echo "title: {{slug}}"
+      echo "date: $(date +%F)"
+      echo "# description: one line shown under the title in the list (optional)"
+      echo "draft: true"
+      echo "---"
+      echo
+    } > "$file"
+    echo "created $file"
     echo "drafts stay out of the build until you set draft: false"
 
-# Start a news item in both languages. The file name gets a date prefix to keep
+# Start a homepage news item. The file name gets a date prefix to keep
 # the directory readable; ordering itself comes from the date field inside.
 # Usage: alors news repro-hpc
 news slug:
-    for lang in en zh; do
-      file="src/content/news/$lang/$(date +%Y-%m)-{{slug}}.md"
-      if [ -e "$file" ]; then
-        echo "already there: $file"
-        continue
-      fi
-      {
-        echo "---"
-        echo "date: $(date +%F)"
-        echo "---"
-        echo
-      } > "$file"
-      echo "created $file"
-    done
+    file="src/content/news/$(date +%Y-%m)-{{slug}}.md"
+    if [ -e "$file" ]; then
+      echo "already there: $file"
+      exit 0
+    fi
+    {
+      echo "---"
+      echo "date: $(date +%F)"
+      echo "---"
+      echo
+    } > "$file"
+    echo "created $file"
 
 # Publish: build, push, wait for the GitHub Actions deploy, check the live site.
 publish: deploy, ci
     sleep 3
     failed=""
-    for path in / /publications/ /blog/ /zh/ /zh/publications/ /zh/blog/ /favicon.svg; do
+    for path in / /publications/ /blog/ /favicon.svg; do
       code=$(curl -s -o /dev/null -w '%{http_code}' "{{site}}$path")
       echo "  $code  {{site}}$path"
       if [ "$code" != "200" ]; then
@@ -86,7 +82,7 @@ publish: deploy, ci
 # site, so this is the only place they are counted.
 drafts:
     found=""
-    for file in src/content/posts/*/*.md; do
+    for file in src/content/posts/*.md; do
       if [ ! -e "$file" ]; then
         continue
       fi
@@ -94,7 +90,6 @@ drafts:
         continue
       fi
       found="yes"
-      lang=$(basename "$(dirname "$file")")
       slug=$(basename "$file" .md)
       title=$(sed -n 's/^title: *//p' "$file" | head -1 | sed 's/^"\(.*\)"$/\1/')
       # Everything outside the frontmatter block. Doing this with two seds
@@ -102,16 +97,9 @@ drafts:
       body=$(awk 'NR == 1 && $0 == "---" { inside = 1; next }
                   inside && $0 == "---" { inside = 0; next }
                   !inside { print }' "$file")
-      # Chinese has no spaces between words, so count characters there instead.
-      if [ "$lang" = "zh" ]; then
-        count=$(printf '%s' "$body" | tr -d '[:space:]' | wc -m | tr -d ' ')
-        unit="chars"
-      else
-        count=$(printf '%s' "$body" | wc -w | tr -d ' ')
-        unit="words"
-      fi
+      count=$(printf '%s' "$body" | wc -w | tr -d ' ')
       touched=$(date -r "$file" '+%Y-%m-%d')
-      printf '%-3s %-28s %6s %-6s edited %s   %s\n' "$lang" "$slug" "$count" "$unit" "$touched" "$title"
+      printf '%-28s %6s words edited %s   %s\n' "$slug" "$count" "$touched" "$title"
     done
     if [ -z "$found" ]; then
       echo "no drafts — everything in src/content/posts/ is published"

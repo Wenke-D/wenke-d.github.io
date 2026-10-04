@@ -27,8 +27,7 @@
    the site was rendering in whatever sans the visitor's OS supplies. Served
    from public/fonts/ rather than Google's CDN — no third-party request, and
    nothing to break if that CDN is blocked. One variable file per subset covers
-   weights 400-700. Chinese has no Inter glyphs and keeps falling back to the
-   system CJK face, which is what we want. */
+   weights 400-700. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -196,15 +195,6 @@ body.reading .page {
   max-width: 64ch;
   font-size: 1.0625rem;
   line-height: 1.75;
-}
-
-/* Chinese justifies cleanly: the characters are uniform width, so both edges
-   line up without opening gaps. English justified without hyphenation does
-   the opposite — it stretches word spacing into rivers — so it stays ragged. */
-.prose:lang(zh) {
-  text-align: justify;
-  text-justify: inter-ideograph;
-  line-height: 1.85;
 }
 
 /* Avoid a last line with a single word on it. */

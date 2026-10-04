@@ -1,23 +1,20 @@
 ---
-import { getRelativeLocaleUrl } from "astro:i18n";
 import { getEntry, render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import type { Lang } from "../i18n";
 import type { Post } from "../lib/posts";
 import { fullDate } from "../lib/date";
 
 interface Props {
-  lang: Lang;
   post: Post;
 }
 
-const { lang, post } = Astro.props;
-const t = (await getEntry("ui", lang))!.data;
+const { post } = Astro.props;
+const t = (await getEntry("ui", "main"))!.data;
 const { Content } = await render(post);
-const blogUrl = getRelativeLocaleUrl(lang, "blog");
+const blogUrl = "/blog/";
 ---
 
-<Layout lang={lang} title={post.data.title} description={post.data.description} reading>
+<Layout title={post.data.title} description={post.data.description} reading>
   <a class="text-sm text-accent hover:underline" href={blogUrl}>{t.backBlog}</a>
 
   <article class="mt-4">
@@ -26,7 +23,7 @@ const blogUrl = getRelativeLocaleUrl(lang, "blog");
     </h1>
     <p class="mt-2 flex items-center gap-2 text-sm text-zinc-400">
       <time datetime={post.data.date.toISOString().slice(0, 10)}>
-        {fullDate(lang, post.data.date)}
+        {fullDate(post.data.date)}
       </time>
       {post.data.draft && (
         <span class="rounded border border-dashed border-zinc-300 px-1.5 py-0.5 text-xs text-zinc-500 dark:border-zinc-700">

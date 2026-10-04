@@ -1,13 +1,6 @@
 ---
 import { getEntry } from "astro:content";
-import type { Lang } from "../i18n";
-
-interface Props {
-  lang: Lang;
-}
-
-const { lang } = Astro.props;
-const t = (await getEntry("ui", lang))!.data.theme;
+const t = (await getEntry("ui", "main"))!.data.theme;
 ---
 
 {/* Two positions, no "system" button: the page follows the OS until the reader

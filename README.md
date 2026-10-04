@@ -19,9 +19,9 @@ TypeScript involved, and no CSS classes to remember: links written as
 
 | What | File |
 | --- | --- |
-| Name, role, affiliation, bio | `src/content/profile/en.md`, `zh.md` |
-| News items | `src/content/news/<lang>/*.md` — one file per item |
-| Blog posts | `src/content/posts/<lang>/*.md` — one file per post |
+| Name, role, affiliation, bio | `src/content/profile.md` |
+| News items | `src/content/news/*.md` — one file per item |
+| Blog posts | `src/content/posts/*.md` — one file per post |
 | Publications | `src/content/publications.yaml` |
 | Email, external links | `src/content/site.yaml` |
 | Interface labels ("News", "All →") | `src/content/ui.yaml` |
@@ -32,9 +32,10 @@ TypeScript involved, and no CSS classes to remember: links written as
 missing or misspelled, the build fails with the file name and the field — the
 site never deploys half-empty.
 
-**Add a news item:** drop a file in `src/content/news/en/` (and the matching one
-in `zh/`). The file name is yours to pick; the list is ordered by `date`, newest
-first, and the date shown on the page is formatted per language.
+The entire site is English only. Pages use `/`, `/blog/`, and `/publications/`.
+
+**Add a news item:** drop a file in `src/content/news/`. The file name is yours
+to pick; the list is ordered by `date`, newest first.
 
 ```md
 ---
@@ -44,19 +45,18 @@ date: 2026-11-20
 Gave a talk at [SC26](https://sc26.supercomputing.org/). 🎉
 ```
 
-**Write a blog post:** `alors post why-nix` scaffolds one in both languages, or
+**Write a blog post:** `alors post why-nix` scaffolds a draft, or
 copy an existing file and rename it — the file name becomes the URL
-(`why-nix.md` → `/blog/why-nix`). Posts are per language and independent:
-writing one in Chinese only is fine. The homepage shows a **Blog** link as soon
-as one post is published in that language.
+(`why-nix.md` → `/blog/why-nix`). The homepage shows a **Blog** link as soon as
+one post is published.
 
 **Drafts.** A post with `draft: true` is not published: it is left out of the
 build entirely, so it has no URL and appears in no list on the live site. While
 you work on it:
 
 - `npm run dev` shows it in the blog list and lets you open it, tagged *Draft*
-- `alors drafts` lists everything still unfinished, with a word count (character
-  count for Chinese) and when you last edited it
+- `alors drafts` lists everything still unfinished, with a word count and when
+  you last edited it
 
 Set `draft: false` when it is ready.
 

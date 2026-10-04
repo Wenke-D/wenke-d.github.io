@@ -3,25 +3,23 @@ import "../styles/global.css";
 import { getEntry } from "astro:content";
 import ExternalLink from "../components/ExternalLink.astro";
 import ThemeToggle from "../components/ThemeToggle.astro";
-import type { Lang } from "../i18n";
 
 interface Props {
-  lang: Lang;
   title?: string;
   description?: string;
   /** Blog pages tint the page around a white content column. */
   reading?: boolean;
 }
 
-const { lang, title, description, reading = false } = Astro.props;
-const profile = (await getEntry("profile", lang))!.data;
+const { title, description, reading = false } = Astro.props;
+const profile = (await getEntry("profile", "profile"))!.data;
 // Homepage tab: "Name · Role". Subpages: "Page · Name".
 const pageTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.role}`;
 const desc = description ?? profile.summary;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,7 +55,7 @@ const desc = description ?? profile.summary;
           © {new Date().getFullYear()} {profile.name}. Built with{" "}
           <ExternalLink href="https://astro.build">Astro</ExternalLink>.
         </p>
-        <ThemeToggle lang={lang} />
+        <ThemeToggle />
       </footer>
     </div>
   </body>
