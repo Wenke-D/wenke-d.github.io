@@ -1,8 +1,8 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import { monthYear } from "../lib/date";
-import { getPosts } from "../lib/posts";
+import { fullDate, monthYear } from "../lib/date";
+import { getPosts, slugOf } from "../lib/posts";
 import { renderAuthors } from "../lib/authors";
 import ExternalLink from "./ExternalLink.astro";
 
@@ -28,8 +28,10 @@ const selected = (await getCollection("publications", (p) => p.data.selected)).s
 );
 
 const pubsUrl = "/publications/";
-// The blog link only appears once there is something published to link to.
-const hasPosts = (await getPosts()).length > 0;
+// The blog link and section only appear once there is something published.
+const posts = await getPosts();
+const hasPosts = posts.length > 0;
+const recentPosts = posts.slice(0, 3);
 const blogUrl = "/blog/";
 ---
 
@@ -111,4 +113,36 @@ const blogUrl = "/blog/";
       }
     </ul>
   </section>
+
+  <!-- Recent blog posts -->
+  {
+    hasPosts && (
+      <section class="mt-12">
+        <div class="flex items-baseline justify-between">
+          <h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            {t.blogTitle}
+          </h2>
+          <a class="text-sm text-accent hover:underline" href={blogUrl}>{t.allLink}</a>
+        </div>
+        <ul class="mt-4 space-y-6">
+          {recentPosts.map((post) => (
+            <li>
+              <p class="text-sm text-zinc-400">{fullDate(post.data.date)}</p>
+              <h3 class="mt-0.5 font-medium">
+                <a
+                  class="text-zinc-900 hover:text-accent dark:text-white dark:hover:text-accent"
+                  href={`/blog/${slugOf(post)}/`}
+                >
+                  {post.data.title}
+                </a>
+              </h3>
+              {post.data.description && (
+                <p class="text-sm text-zinc-600 dark:text-zinc-400">{post.data.description}</p>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </Layout>
