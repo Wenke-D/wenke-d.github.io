@@ -12,6 +12,8 @@
   year: 2026
   selected: true
   links:
+    - label: Paper
+      href: https://www.computer.org/csdl/proceedings-article/sc-w/2026/122100b384/2lkuF5dyHNm
     - label: Workshop
       href: https://ai4s.github.io/
 
